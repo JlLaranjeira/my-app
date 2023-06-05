@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-interface TableData {
-  id: number;
-  name: string;
-  age: number;
-  // adicione mais propriedades aqui, se necessário
-}
+
 
 interface TableHeader {
     label: string;
@@ -24,6 +19,7 @@ interface TableHeader {
     'sp.defense': number;
     speed: number;
     total: number;
+    
   }
   
   function getTableHeaders(): TableHeader[] {
@@ -48,22 +44,21 @@ interface TableHeader {
     return tableHeaders;
   }
   
-  const tableHeaders: TableHeader[] = getTableHeaders();
-  console.log(tableHeaders);
+  
   
 
 // Defina os dados da tabela
-const tableData: TableData[] = [
-  { id: 1, name: 'Blastoise', type: water, hp: 79, attack: 83, defense: 100, 'sp.attack': 85, 'sp.defense': 105, speed: 78, total: 530 },
-  { id: 2, name: 'Bullbasaur', type: grass, hp: 45, attack: 49, defense:49, 'sp.attack': 65, 'sp.defense': 65, speed: 45, total: 318 },
-  { id: 3, name: 'Caterpie', type: bug, hp: 45, attack: 30, defense: 35, 'sp.attack': 20, 'sp.defense': 20, speed: 45, total: 195 },
-  { id: 4, name: 'Charizard', type: fire, hp: 78, attack: 84, defense: 78, 'sp.attack': 109, 'sp.defense': 85, speed: 100, total: 534 },
-  { id: 5, name: 'Charmander', type: fire, hp: 39, attack: 52, defense: 43, 'sp.attack': 60, 'sp.defense': 50, speed: 65, total: 309},
-  { id: 6, name: 'Charmeleon',type: fire, hp: 58, attack: 64, defense:58, 'sp.attack': 80, 'sp.defense': 65, speed: 80, total: 405},
-  { id: 7, name: 'Ivysaur', type: Grass, hp: 60, attack: 62, defense: 63, 'sp.attack': 80, 'sp.defense': 80, speed: 60, total: 405},
-  { id: 8, name: 'Squirtle', type: water, hp: 44, attack: 48, defense: 65, 'sp.attack': 50, 'sp.defense': 64, speed: 43, total: 314},
-  { id: 9, name: 'Venusaur', type: grass, hp: 80, attack: 80, defense: 83, 'sp.attack': 100, 'sp.defense': 100, speed: 80, total: 525},
-  { id: 10, name: 'Wartortle', type: water, hp: 59, attack: 63, defense: 80, 'sp.attack': 65, 'sp.defense': 80, speed: 58, total: 405},
+const tableData: Pokemon[] = [
+  { id: 1, name: 'Blastoise', type: 'water', hp: 79, attack: 83, defense: 100, 'sp.attack': 85, 'sp.defense': 105, speed: 78, total: 530 },
+  { id: 2, name: 'Bullbasaur', type: 'grass', hp: 45, attack: 49, defense:49, 'sp.attack': 65, 'sp.defense': 65, speed: 45, total: 318 },
+  { id: 3, name: 'Caterpie', type: 'bug', hp: 45, attack: 30, defense: 35, 'sp.attack': 20, 'sp.defense': 20, speed: 45, total: 195 },
+  { id: 4, name: 'Charizard', type: 'fire', hp: 78, attack: 84, defense: 78, 'sp.attack': 109, 'sp.defense': 85, speed: 100, total: 534 },
+  { id: 5, name: 'Charmander', type: 'fire', hp: 39, attack: 52, defense: 43, 'sp.attack': 60, 'sp.defense': 50, speed: 65, total: 309},
+  { id: 6, name: 'Charmeleon',type: 'fire', hp: 58, attack: 64, defense:58, 'sp.attack': 80, 'sp.defense': 65, speed: 80, total: 405},
+  { id: 7, name: 'Ivysaur', type: 'grass', hp: 60, attack: 62, defense: 63, 'sp.attack': 80, 'sp.defense': 80, speed: 60, total: 405},
+  { id: 8, name: 'Squirtle', type: 'water', hp: 44, attack: 48, defense: 65, 'sp.attack': 50, 'sp.defense': 64, speed: 43, total: 314},
+  { id: 9, name: 'Venusaur', type: 'grass', hp: 80, attack: 80, defense: 83, 'sp.attack': 100, 'sp.defense': 100, speed: 80, total: 525},
+  { id: 10, name: 'Wartortle', type: 'water', hp: 59, attack: 63, defense: 80, 'sp.attack': 65, 'sp.defense': 80, speed: 58, total: 405},
   // ... adicione mais dados aqui
 ];
 
@@ -71,7 +66,14 @@ const tableData: TableData[] = [
 const tableHeaders: TableHeader[] = [
   { label: 'ID', key: 'id' },
   { label: 'Name', key: 'name' },
-  { label: 'Age', key: 'age' },
+  { label: 'type', key: 'type' },
+  { label: 'hp', key: 'hp' },
+  { label: 'attack', key: 'attack' },
+  { label: 'defense', key: 'defense' },
+  { label: 'sp.attack', key: 'sp.attack' },
+  { label: 'sp.defense', key: 'sp.defense' },
+  { label: 'speed', key: 'speed' },
+  { label: 'total', key: 'total' },
 ];
 
 
@@ -102,36 +104,28 @@ const TableRow = styled.tr`
 `;
 
 const ResponsiveTable: React.FC = () => {
-  const [sortColumn, setSortColumn] = useState<keyof TableData>('');
+  const [sortColumn, setSortColumn] = useState<string>('name');
 
-  const handleSort = (columnKey: keyof TableData) => {
+  const handleSort = (columnKey: string) => {
     setSortColumn(columnKey);
   };
 
-  const sortedData = sortColumn ? [...tableData].sort((a, b) => {
-    const aValue = a[sortColumn];
-    const bValue = b[sortColumn];
-
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return aValue.localeCompare(bValue);
-    } else {
-      return aValue - bValue;
-    }
-  }) : tableData;
 
   return (
     <Table>
       <thead>
         <TableRow>
-          {tableHeaders.map(header => (
+          {tableHeaders.map(header =>{
+            console.log(header)
+            return (
             <TableHeader key={header.key} onClick={() => handleSort(header.key)}>
               {header.label}
             </TableHeader>
-          ))}
+          )})}
         </TableRow>
       </thead>
       <tbody>
-        {sortedData.map(row => (
+        {tableData.map(row => (
           <TableRow key={row.id}>
             {tableHeaders.map(header => (
               <TableCell key={`${row.id}-${header.key}`}>
